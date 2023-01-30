@@ -2,7 +2,8 @@ import os
 from pathlib import Path
 from typing import List, Union
 
-import soundfile
+#import soundfile
+import librosa
 
 from .dsp import resample_audio
 
@@ -70,7 +71,9 @@ def load_audio(audio_file_path, sample_rate=None, start=0, stop=None):
     # TODO: Clarify whether start/stop is in samples or in seconds, and whether or not it
     #  relates to the original or the resampled audio.
     """Loads the audio given the path of an audio file."""
-    audio, source_sample_rate = soundfile.read(audio_file_path, start=start, stop=stop)
+    #audio, source_sample_rate = soundfile.read(audio_file_path, start=start, stop=stop)
+    duration = stop - start if stop else None
+    audio, source_sample_rate = librosa.load(filename, offset=start, duration=duration)
 
     if sample_rate:
         audio = resample_audio(audio, source_sample_rate, sample_rate)
